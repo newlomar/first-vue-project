@@ -8,16 +8,27 @@
     <script src="https://unpkg.com/vue@3"></script>
   </head>
   <body>
-    <div id="asdasd">
+    <div id="app">
       <h1>Hello {{ name }}</h1>
-    </div>
 
+      <button @click="showName(name)">Botão</button>
+
+      <div v-for="user in users" @click="showName(user.name)">
+        <h2>{{ user.name }}</h2>
+      </div>
+    </div>
     <script>
       var app = Vue.createApp({
         data() {
           return {
             name: "Newton",
+            users: [{ name: "Newton" }, { name: "Ana" }, { name: "Luciene" }],
           };
+        },
+        methods: {
+          showName(name) {
+            alert(name);
+          },
         },
       });
 
