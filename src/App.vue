@@ -2,12 +2,25 @@
   <div class="users">
     <div class="container">
       <section>
+        <h5 class="title">Novo usuário</h5>
+        <form @submit.prevent="createUser">
+          <input
+            ref="name"
+            type="text"
+            placeholder="Nome"
+            v-model="form.name"
+          />
+          <input type="text" placeholder="Email" v-model="form.email" />
+          <button type="submit">Adicionar</button>
+        </form>
+      </section>
+      <section>
         <h5 class="title">Lista de usuários</h5>
         <ul>
           <li v-for="user in users" :key="user.id">
             <p>{{ user.name }}</p>
             <small>{{ user.email }}</small>
-            <a class="destroy"></a>
+            <a class="destroy" @click="destroyUser(user.id)"></a>
           </li>
         </ul>
       </section>
@@ -29,6 +42,10 @@ export default defineComponent({
   data() {
     return {
       users: [] as User[],
+      form: {
+        name: '',
+        email: '',
+      },
     };
   },
   created() {
@@ -39,6 +56,24 @@ export default defineComponent({
       try {
         const { data } = await axios.get('/users');
         this.users = data;
+      } catch (error) {
+        console.warn(error);
+      }
+    },
+    async createUser() {
+      try {
+        const { data } = await axios.post('/users', this.form);
+        this.users.push(data);
+
+        this.form.name = '';
+        this.form.email = '';
+      } catch (error) {
+        console.warn(error);
+      }
+    },
+    async destroyUser(id: User['id']) {
+      try {
+        await axios.delete(`users/${id}`);
       } catch (error) {
         console.warn(error);
       }
