@@ -31,12 +31,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import axios from '@/utils/axios';
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-}
+import { User } from '@/types/User';
 
 export default defineComponent({
   data() {
@@ -74,6 +69,10 @@ export default defineComponent({
     async destroyUser(id: User['id']) {
       try {
         await axios.delete(`users/${id}`);
+
+        const userIndex = this.users.findIndex((user) => user.id === id);
+
+        this.users.splice(userIndex, 1);
       } catch (error) {
         console.warn(error);
       }
